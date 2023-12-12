@@ -1,0 +1,16 @@
+const router = require("express").Router();
+const {
+  getAllCats,
+  getCatById,
+  createCat,
+  deleteCat,
+  updateCat,
+} = require("../controllers/catController");
+
+router.get("/", getAllCats);
+router.post("/", createCat);
+router.get("/:id", getCatById);
+router.delete("/:id", deleteCat);
+router.put("/:id", updateCat);
+
+module.exports = router;
