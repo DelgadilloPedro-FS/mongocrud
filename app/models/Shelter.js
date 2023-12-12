@@ -5,6 +5,8 @@ const shelterSchema = new mongoose.Schema({
     type: String,
     required: true,
     trim: true,
+    minlength: [1, "you need a name!"],
+    maxlength: [70, "don't put everyones name on the building it's too long"],
   },
   dateOpened: {
     type: Date,
