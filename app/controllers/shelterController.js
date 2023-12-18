@@ -2,7 +2,7 @@ const Shelters = require("../models/Shelter");
 
 const getAllShelters = async (req, res) => {
   try {
-    const allShelters = await Shelters.find().populate("cats");
+    const allShelters = await Shelters.find().select("-__v").populate("cats");
     res.status(200).json({
       success: true,
       message: `${req.method} - request to Shelter endpoint`,
@@ -20,7 +20,7 @@ const getAllShelters = async (req, res) => {
 
 const getShelterById = async (req, res) => {
   const { id } = req.params;
-  const shelter = await Shelters.findById(id).populate("cats");
+  const shelter = await Shelters.findById(id).select("name _id").populate("cats", "name age breed");
   if (!shelter) {
     return res.status(404).json({
       success: false,
@@ -35,12 +35,22 @@ const getShelterById = async (req, res) => {
 };
 
 const createShelter = async (req, res) => {
+  const { shelter } = req.body;
+
+  // Check if a shelter with the same name already exists
+  const existingShelter = await Shelters.find({ name: shelter.name });
+  console.log(existingShelter)
+  if (existingShelter.length>0) {
+    return res.status(406).json({
+      message: "Shelter with this name already exists",
+    });
+  }
+
+  // Create the new shelter if it doesn't exist
   try {
-    const { shelter } = req.body;
     const newShelter = await Shelters.create(shelter);
     console.log("data >>>>", newShelter);
     res.status(201).json({
-      // Use 201 for successful creation
       success: true,
       message: `Shelter created successfully`,
       shelter: newShelter,
@@ -68,6 +78,7 @@ const createShelter = async (req, res) => {
     }
   }
 };
+
 
 const updateShelter = async (req, res) => {
   try {
