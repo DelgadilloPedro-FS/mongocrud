@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const User = require("../models/User");
 
 const connectDB = async () => {
   try {
@@ -10,4 +11,12 @@ const connectDB = async () => {
     console.log("this is an error",error);
   }
 };
-module.exports = connectDB
+
+const saveUser = async (newUser) =>{
+  return await newUser.save();
+}
+const findUser = async (object) =>{
+  return await User.find(Object).exec();
+}
+
+module.exports = {connectDB, findUser, saveUser}
